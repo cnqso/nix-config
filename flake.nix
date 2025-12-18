@@ -8,13 +8,13 @@
   };
 
   outputs = { self, nixpkgs, disko, ... }@inputs: {
-    nixosConfigurations.5starcrest = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.crest = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
         disko.nixosModules.disko
-        ./hosts/5starcrest/disks.nix
-        ./hosts/5starcrest/default.nix
+        ./hosts/crest/disks.nix
+        ./hosts/crest/default.nix
         ./modules/dev.nix
       ];
     };

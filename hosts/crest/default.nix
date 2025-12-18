@@ -6,7 +6,7 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "5starcrest";
+  networking.hostName = "crest";
   networking.networkmanager.enable = true;
 
   services.xserver.videoDrivers = [ "nvidia" ];
