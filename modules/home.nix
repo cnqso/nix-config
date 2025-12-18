@@ -15,9 +15,11 @@
 
       programs.git = {
         enable = true;
-        userName = "cnqso";
-        userEmail = "wmkelly@umich.edu";
-        extraConfig = {
+        settings = {
+          user = {
+            name = "cnqso";
+            email = "wmkelly@umich.edu";
+          };
           init.defaultBranch = "main";
           pull.rebase = false;
         };
@@ -85,7 +87,9 @@
       # Kitty terminal configuration (simple rice)
       programs.kitty = {
         enable = true;
-        theme = "Gruvbox Light";
+        # Home Manager replaced `programs.kitty.theme` with `programs.kitty.themeFile`.
+        # Pick a concrete theme file from pkgs.kitty-themes.
+        themeFile = "${pkgs.kitty-themes}/share/kitty-themes/themes/gruvbox-light.conf";
         settings = {
           font_family = "JetBrainsMono Nerd Font";
           font_size = 12;
