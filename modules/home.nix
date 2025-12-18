@@ -85,7 +85,7 @@
       # Kitty terminal configuration (simple rice)
       programs.kitty = {
         enable = true;
-        theme = "Tokyo Night";
+        theme = "Gruvbox Light";
         settings = {
           font_family = "JetBrainsMono Nerd Font";
           font_size = 12;
