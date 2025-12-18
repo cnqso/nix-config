@@ -87,9 +87,11 @@
       # Kitty terminal configuration (simple rice)
       programs.kitty = {
         enable = true;
-        # Home Manager replaced `programs.kitty.theme` with `programs.kitty.themeFile`.
-        # Pick a concrete theme file from pkgs.kitty-themes.
-        themeFile = "${pkgs.kitty-themes}/share/kitty-themes/themes/gruvbox-light.conf";
+        # Apply theme explicitly. This avoids HM's kitty theme activation check trying to
+        # reinterpret the value (which can lead to doubled paths / `.conf.conf`).
+        extraConfig = ''
+          include ${pkgs.kitty-themes}/share/kitty-themes/themes/gruvbox-light.conf
+        '';
         settings = {
           font_family = "JetBrainsMono Nerd Font";
           font_size = 12;
