@@ -10,7 +10,7 @@
       home.stateVersion = "24.11";
 
       home.packages = with pkgs; [
-        (nerdfonts.override { fonts = [ "JetBrainsMono" ]; })
+        nerd-fonts.jetbrains-mono
       ];
 
       programs.git = {
