@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   # Configure Home Manager
@@ -6,7 +6,7 @@
     useGlobalPkgs = true;
     useUserPackages = true;
 
-    users.cnqso = { config, pkgs, lib, osConfig, ... }: {
+    users.cnqso = { config, osConfig, ... }: {
       home.stateVersion = "24.11";
 
       home.packages = with pkgs; [
@@ -63,7 +63,7 @@
             local TOP_LINE="\[\e[41;30m\] 󰣇 \[\e[42;31m\]\[\e[42;30m\] \u \[\e[46;32m\]\[\e[46;30m\] \h \[\e[45;36m\]\[\e[45;30m\] \t \[\e[0m\]"
             
             # Bottom line with lambda and working directory
-            local LAMBDA="λ"
+            local LAMBDA="󰡣"
             if [ $EXIT_STATUS -eq 0 ]; then
               LAMBDA="\[\e[32m\]$LAMBDA\[\e[0m\]"
             else
@@ -83,6 +83,20 @@
 
       # NOTE: Home Manager niri config removed for now (it was failing evaluation because
       # Home Manager doesn't provide a `programs.niri` module / `lib.niri` helpers here).
+      xdg.configFile = lib.mkIf (osConfig.networking.hostName == "crest") {
+        "niri/config.kdl".text = ''
+          output "HDMI-A-2" {
+              mode "2560x1440@59.951"
+              position x=0 y=0
+          }
+
+          output "DP-1" {
+              mode "2560x1440@143.912"
+              position x=2560 y=0
+              focus-at-startup
+          }
+        '';
+      };
 
       # Kitty terminal configuration (simple rice)
       programs.kitty = {
@@ -99,59 +113,6 @@
           window_padding_width = 8;
           background_opacity = "0.95";
           confirm_os_window_close = 0;
-        };
-      };
-
-      # Monitor layout (crest): HDMI-A-2 to the LEFT of DP-1, DP-1 forced to ~144Hz.
-      #
-      # Outputs + modes are sourced from `wlr-randr --json` on crest:
-      # - DP-1: 2560x1440@143.912Hz (Dell S2719DGF)
-      # - HDMI-A-2: 2560x1440@59.951Hz (ASUS MX27AQ)
-      systemd.user.services.monitor-setup = lib.mkIf (osConfig.networking.hostName == "crest") {
-        Unit = {
-          Description = "Configure monitors via wlr-randr (DP-1 primary/right, HDMI-A-2 left)";
-          After = [ "graphical-session.target" ];
-          PartOf = [ "graphical-session.target" ];
-        };
-
-        Service = {
-          Type = "oneshot";
-          Environment = [
-            "XDG_RUNTIME_DIR=%t"
-          ];
-          ExecStart = "${pkgs.bash}/bin/bash -c ${lib.escapeShellArg ''
-            set -e -o pipefail
-
-            # Wait briefly for a Wayland socket to exist (niri session)
-            for _ in $(seq 1 100); do
-              if [ -n "$WAYLAND_DISPLAY" ] && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
-                break
-              fi
-
-              if [ -z "$WAYLAND_DISPLAY" ]; then
-                for cand in "$XDG_RUNTIME_DIR"/wayland-*; do
-                  if [ -S "$cand" ]; then
-                    export WAYLAND_DISPLAY="$(basename "$cand")"
-                    break
-                  fi
-                done
-              fi
-
-              if [ -n "$WAYLAND_DISPLAY" ] && [ -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
-                break
-              fi
-
-              sleep 0.1
-            done
-
-            exec ${pkgs.wlr-randr}/bin/wlr-randr \
-              --output HDMI-A-2 --on --mode 2560x1440@59.951Hz --pos 0,0 \
-              --output DP-1     --on --mode 2560x1440@143.912Hz --pos 2560,0
-          ''}";
-        };
-
-        Install = {
-          WantedBy = [ "graphical-session.target" ];
         };
       };
     };

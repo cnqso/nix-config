@@ -16,6 +16,8 @@
 
   networking.hostName = "crest";
   networking.networkmanager.enable = true;
+  networking.nameservers = [ "1.1.1.1" "8.8.8.8" ];
+  networking.networkmanager.dns = "none";
 
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
