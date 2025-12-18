@@ -1,7 +1,10 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./hardware.nix ];
+  imports = [
+    ./hardware.nix
+    ./bluetooth.nix
+  ];
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -19,7 +22,12 @@
   };
 
   programs.niri.enable = true;
-
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    localNetworkGameTransfers.openFirewall = true;
+  };
   environment.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     LIBVA_DRIVER_NAME = "nvidia";
@@ -37,7 +45,19 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    git vim wget kitty firefox xwayland-satellite
+    git
+    vim
+    wget
+    kitty
+    firefox
+    xwayland-satellite
+    fuzzel
+    alacritty
+    neovim
+    wlr-randr
+
+    code-cursor
+    wl-clipboard
   ];
 
   system.stateVersion = "24.11";
