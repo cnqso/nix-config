@@ -9,7 +9,7 @@
   users.users.cnqso = {
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "docker" ];
-    initialPassword = "changeme";
+    initialPassword = "nixos";
   };
 
   # Nix settings
