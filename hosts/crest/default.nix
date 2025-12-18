@@ -6,7 +6,9 @@
     ../../modules/common.nix
     ../../modules/desktop.nix
     ../../modules/dev.nix
+    ../../modules/audio.nix
     ../../modules/bluetooth.nix
+    ../../modules/home.nix
   ];
 
   networking.hostName = "crest";

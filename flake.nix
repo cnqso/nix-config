@@ -5,15 +5,18 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { self, nixpkgs, disko, ... }@inputs: {
+  outputs = { self, nixpkgs, disko, home-manager, ... }@inputs: {
     nixosConfigurations = {
       crest = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
           disko.nixosModules.disko
+          home-manager.nixosModules.home-manager
           ./hosts/crest/disks.nix
           ./hosts/crest/default.nix
         ];
@@ -24,6 +27,7 @@
         specialArgs = { inherit inputs; };
         modules = [
           disko.nixosModules.disko
+          home-manager.nixosModules.home-manager
           ./hosts/ste/disks.nix
           ./hosts/ste/default.nix
         ];
