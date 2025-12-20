@@ -5,6 +5,7 @@
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
+    backupFileExtension = "backup";
 
     users.cnqso = { config, osConfig, ... }: {
       home.stateVersion = "24.11";
@@ -83,22 +84,20 @@
 
       # NOTE: Home Manager niri config removed for now (it was failing evaluation because
       # Home Manager doesn't provide a `programs.niri` module / `lib.niri` helpers here).
-      xdg.configFile = lib.mkIf (osConfig.networking.hostName == "crest") {
-        "niri/config.kdl" = {
-          force = true;
-          text = ''
-            output "HDMI-A-2" {
-                mode "2560x1440@59.951"
-                position x=0 y=0
-            }
+      programs.niri = lib.mkIf (osConfig.networking.hostName == "crest") {
+        # Keep it dead simple: set the exact max modes we detected.
+        config = ''
+          output "HDMI-A-2" {
+              mode "2560x1440@59.951"
+              position x=0 y=0
+          }
 
-            output "DP-1" {
-                mode "2560x1440@143.912"
-                position x=2560 y=0
-                focus-at-startup
-            }
-          '';
-        };
+          output "DP-1" {
+              mode "2560x1440@143.912"
+              position x=2560 y=0
+              focus-at-startup
+          }
+        '';
       };
 
       # Kitty terminal configuration (simple rice)
