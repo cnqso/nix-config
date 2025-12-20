@@ -14,6 +14,9 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Enable firmware for Realtek RTL8125 ethernet (2.5GbE)
+  hardware.enableRedistributableFirmware = true;
+
   networking.hostName = "crest";
   networking.networkmanager.enable = true;
   networking.nameservers = [ "1.1.1.1" "8.8.8.8" ];

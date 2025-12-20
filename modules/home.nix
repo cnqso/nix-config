@@ -121,7 +121,7 @@
           # Launchers
           "Mod+T".action.spawn = ["kitty"];
           "Mod+D".action.spawn = ["fuzzel"];
-          "Mod+Return".action.spawn = ["kitty"];
+          "Mod+Space".action.spawn = ["kitty"];
           
           # Window management
           "Mod+Q".action.close-window = {};
