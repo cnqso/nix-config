@@ -173,10 +173,10 @@
           "Mod+C".action.center-column = {};
           
           # Monitor navigation
-          "Mod+Shift+Ctrl+Left".action.move-column-to-output-left = {};
-          "Mod+Shift+Ctrl+Right".action.move-column-to-output-right = {};
-          "Mod+Shift+Ctrl+H".action.move-column-to-output-left = {};
-          "Mod+Shift+Ctrl+L".action.move-column-to-output-right = {};
+          "Mod+Shift+Ctrl+Left".action.move-column-to-monitor-left = {};
+          "Mod+Shift+Ctrl+Right".action.move-column-to-monitor-right = {};
+          "Mod+Shift+Ctrl+H".action.move-column-to-monitor-left = {};
+          "Mod+Shift+Ctrl+L".action.move-column-to-monitor-right = {};
           
           # Screenshots
           "Print".action.screenshot = {};
