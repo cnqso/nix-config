@@ -16,11 +16,17 @@
 
   # Enable firmware for Realtek RTL8125 ethernet (2.5GbE)
   hardware.enableRedistributableFirmware = true;
+  
+  # Use the better out-of-tree Realtek driver for RTL8125
+  boot.blacklistedKernelModules = [ "r8169" ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.r8125 ];
+  boot.kernelModules = [ "r8125" ];
 
   networking.hostName = "crest";
   networking.networkmanager.enable = true;
-  networking.nameservers = [ "1.1.1.1" "8.8.8.8" ];
-  networking.networkmanager.dns = "none";
+  
+  # Force specific DNS servers (instead of using router's DNS)
+  networking.networkmanager.insertNameservers = [ "1.1.1.1" "8.8.8.8" ];
 
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
