@@ -18,9 +18,9 @@
   hardware.enableRedistributableFirmware = true;
   
   # Use the better out-of-tree Realtek driver for RTL8125
-  boot.blacklistedKernelModules = [ "r8169" ];
-  boot.extraModulePackages = [ config.boot.kernelPackages.r8125 ];
-  boot.kernelModules = [ "r8125" ];
+  # boot.blacklistedKernelModules = [ "r8169" ];
+  # boot.extraModulePackages = [ config.boot.kernelPackages.r8125 ];
+  # boot.kernelModules = [ "r8125" ];
 
   networking.hostName = "crest";
   networking.networkmanager.enable = true;
