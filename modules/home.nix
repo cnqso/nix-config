@@ -134,6 +134,12 @@
           "Mod+Down".action.focus-window-down = {};
           "Mod+Up".action.focus-window-up = {};
           
+          
+          "Mod+Home".action.focus-column-first = {};
+          "Mod+End".action.focus-column-last = {};
+          "Mod+Ctrl+Home".action.move-column-to-first = {};
+          "Mod+Ctrl+End".action.move-column-to-last = {};
+          
           # Moving windows
           "Mod+Shift+H".action.move-column-left = {};
           "Mod+Shift+L".action.move-column-right = {};
@@ -143,6 +149,20 @@
           "Mod+Shift+Right".action.move-column-right = {};
           "Mod+Shift+Down".action.move-window-down = {};
           "Mod+Shift+Up".action.move-window-up = {};
+
+          "Mod+Page_Down".action.focus-workspace-down = {};
+          "Mod+Page_Up".action.focus-workspace-up = {};
+          "Mod+U".action.focus-workspace-up = {};
+          "Mod+I".action.focus-workspace-down = {};
+          "Mod+Ctrl+Page_Down".action.move-column-to-workspace-down = {};
+          "Mod+Ctrl+Page_Up".action.move-column-to-workspace-up = {};
+          "Mod+Ctrl+U".action.move-column-to-workspace-up = {};
+          "Mod+Ctrl+I".action.move-column-to-workspace-down = {};
+
+          "Mod+Shift+Page_Down".action.move-workspace-down = {};
+          "Mod+Shift+Page_Up".action.move-workspace-up = {};
+          "Mod+Shift+U".action.move-workspace-up = {};
+          "Mod+Shift+I".action.move-workspace-down = {};
           
           # Workspaces
           "Mod+1".action.focus-workspace = 1;
@@ -154,6 +174,16 @@
           "Mod+7".action.focus-workspace = 7;
           "Mod+8".action.focus-workspace = 8;
           "Mod+9".action.focus-workspace = 9;
+
+          "Mod+Ctrl+1".action.move-column-to-workspace = 1;
+          "Mod+Ctrl+2".action.move-column-to-workspace = 2;
+          "Mod+Ctrl+3".action.move-column-to-workspace = 3;
+          "Mod+Ctrl+4".action.move-column-to-workspace = 4;
+          "Mod+Ctrl+5".action.move-column-to-workspace = 5;
+          "Mod+Ctrl+6".action.move-column-to-workspace = 6;
+          "Mod+Ctrl+7".action.move-column-to-workspace = 7;
+          "Mod+Ctrl+8".action.move-column-to-workspace = 8;
+          "Mod+Ctrl+9".action.move-column-to-workspace = 9;
           
           # Move to workspace
           "Mod+Shift+1".action.move-window-to-workspace = 1;
@@ -165,6 +195,9 @@
           "Mod+Shift+7".action.move-window-to-workspace = 7;
           "Mod+Shift+8".action.move-window-to-workspace = 8;
           "Mod+Shift+9".action.move-window-to-workspace = 9;
+
+          "Mod+Comma".action.consume-window-into-column = {};
+          "Mod+Period".action.expel-window-from-column = {};
           
           # Window sizing
           "Mod+R".action.switch-preset-column-width = {};
@@ -186,12 +219,23 @@
           # System
           "Mod+Shift+E".action.quit = {};
           "Mod+Shift+P".action.power-off-monitors = {};
+
+          "Mod+Minus".action.set-column-width = "-10%";
+          "Mod+Equal".action.set-column-width = "+10%";
+          "Mod+Shift+Minus".action.set-column-width = "-10%";
+          "Mod+Shift+Equal".action.set-column-width = "+10%";
           
           # Media keys
           "XF86AudioRaiseVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"];
           "XF86AudioLowerVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"];
           "XF86AudioMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
           "XF86AudioMicMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
+
+          "Mod+Shift+Slash".action.show-hotkey-overlay = {};
+
+
+
+          
         };
       };
 
