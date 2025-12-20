@@ -8,10 +8,6 @@
     backupFileExtension = "backup";
 
     users.cnqso = { config, osConfig, ... }: {
-      imports = [
-        inputs.stylix.homeModules.stylix
-      ];
-      
       home.stateVersion = "24.11";
 
       home.packages = with pkgs; [
@@ -52,6 +48,13 @@
           serverdb = "harlequin /home/cnqso/code/server/go/db/db.db";
           music = "cd /mnt/sdb/Media/Soulseek";
           servup = "cd ~/code/server/go && go run .";
+
+          # NixOS rebuild aliases (dynamically use current hostname)
+          nr = "sudo nixos-rebuild switch --flake $HOME/nix-config#$(hostname)";
+          nrb = "sudo nixos-rebuild build --flake $HOME/nix-config#$(hostname)";
+          nrt = "sudo nixos-rebuild test --flake $HOME/nix-config#$(hostname)";
+          nfc = "cd $HOME/nix-config && nix flake check";
+          nfu = "cd $HOME/nix-config && nix flake update";
         };
         
         sessionVariables = {
@@ -65,10 +68,10 @@
             local EXIT_STATUS="$?"
             
             # Top line with user, host, date, time
-            local TOP_LINE="\[\e[41;30m\] 󰣇 \[\e[42;31m\]\[\e[42;30m\] \u \[\e[46;32m\]\[\e[46;30m\] \h \[\e[45;36m\]\[\e[45;30m\] \t \[\e[0m\]"
+            local TOP_LINE="\[\e[41;30m\] 󱄅 \[\e[42;31m\]\[\e[42;30m\] \u \[\e[46;32m\]\[\e[46;30m\] \h \[\e[45;36m\]\[\e[45;30m\] \t \[\e[0m\]"
             
             # Bottom line with lambda and working directory
-            local LAMBDA="󰡣"
+            local LAMBDA="󱄅"
             if [ $EXIT_STATUS -eq 0 ]; then
               LAMBDA="\[\e[32m\]$LAMBDA\[\e[0m\]"
             else
@@ -87,33 +90,8 @@
       };
 
 
-      # Niri settings (crest-specific monitor layout)
-      programs.niri.settings = lib.mkIf (osConfig.networking.hostName == "crest") {
-        outputs = {
-          "HDMI-A-2" = {
-            mode = {
-              width = 2560;
-              height = 1440;
-              refresh = 59.951;
-            };
-            position = {
-              x = 0;
-              y = 0;
-            };
-          };
-          "DP-1" = {
-            mode = {
-              width = 2560;
-              height = 1440;
-              refresh = 143.912;
-            };
-            position = {
-              x = 2560;
-              y = 0;
-            };
-          };
-        };
-        
+      # Universal niri settings (monitor layouts are host-specific)
+      programs.niri.settings = {
         prefer-no-csd = true;
         
         # Default keybinds
@@ -210,6 +188,9 @@
           "Mod+Shift+Ctrl+Right".action.move-column-to-monitor-right = {};
           "Mod+Shift+Ctrl+H".action.move-column-to-monitor-left = {};
           "Mod+Shift+Ctrl+L".action.move-column-to-monitor-right = {};
+
+          "Mod+Ctrl+Right".action.focus-monitor-right = {};
+          "Mod+Ctrl+Left".action.focus-monitor-left = {};
           
           # Screenshots
           "Print".action.screenshot = {};
@@ -239,24 +220,21 @@
         };
       };
 
-      # Enable stylix for niri theming
-      stylix.targets.niri.enable = true;
+      # Enable stylix targets for various applications
+      stylix.targets = {
+        niri.enable = true;
+        kitty.enable = true;
+        waybar.enable = false;
+        gtk.enable = true;
+        fzf.enable = true;
+        bat.enable = true;
+      };
 
-
-      # Kitty terminal configuration (simple rice)
       programs.kitty = {
         enable = true;
-        # Apply theme explicitly. This avoids HM's kitty theme activation check trying to
-        # reinterpret the value (which can lead to doubled paths / `.conf.conf`).
-        extraConfig = ''
-          include ${pkgs.kitty-themes}/share/kitty-themes/themes/gruvbox-light.conf
-        '';
         settings = {
-          font_family = "JetBrainsMono Nerd Font";
-          font_size = 12;
           enable_audio_bell = false;
           window_padding_width = 8;
-          background_opacity = "0.95";
           confirm_os_window_close = 0;
         };
       };

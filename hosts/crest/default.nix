@@ -9,25 +9,41 @@
     ../../modules/dev.nix
     ../../modules/audio.nix
     ../../modules/bluetooth.nix
+    ../../modules/stylix.nix
+    ../../modules/waybar.nix
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
-  # Enable firmware for Realtek RTL8125 ethernet (2.5GbE)
+  # Host-specific hardware configuration
   hardware.enableRedistributableFirmware = true;
-  
-  # Use the better out-of-tree Realtek driver for RTL8125
+
+  # NTFS support for external drives
+  boot.supportedFilesystems = [ "ntfs" ];
+
+  # External drive mounts
+  fileSystems."/mnt/sda" = {
+    device = "/dev/disk/by-uuid/04E623B5E623A5C0";
+    fsType = "ntfs-3g";
+    options = [ "rw" "uid=1000" "gid=100" "dmask=022" "fmask=133" ];
+  };
+
+  fileSystems."/mnt/sdb" = {
+    device = "/dev/disk/by-uuid/74C62BC6C62B8806";
+    fsType = "ntfs-3g";
+    options = [ "rw" "uid=1000" "gid=100" "dmask=022" "fmask=133" ];
+  };
+
+  # At one point this was helpful for RTL8125 ethernet
   # boot.blacklistedKernelModules = [ "r8169" ];
   # boot.extraModulePackages = [ config.boot.kernelPackages.r8125 ];
   # boot.kernelModules = [ "r8125" ];
 
+  # Host identification and networking
   networking.hostName = "crest";
-  networking.networkmanager.enable = true;
-  
-  # Force specific DNS servers (instead of using router's DNS)
+
+  # Force specific DNS servers (bypassing router DNS)
   networking.networkmanager.insertNameservers = [ "1.1.1.1" "8.8.8.8" ];
 
+  # NVIDIA GPU configuration
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.graphics.enable = true;
   hardware.nvidia = {
@@ -37,44 +53,42 @@
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
-  programs.niri.enable = true;
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true;
-  };
+  # NVIDIA-specific environment variables
   environment.sessionVariables = {
-    NIXOS_OZONE_WL = "1";
     LIBVA_DRIVER_NAME = "nvidia";
     GBM_BACKEND = "nvidia-drm";
     __GLX_VENDOR_LIBRARY_NAME = "nvidia";
   };
 
-  users.users.cnqso = {
-    isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "docker" ];
-    initialPassword = "nixos"; # CHANGE THIS IMMEDIATELY
+  # Host-specific home-manager configuration (dual monitor setup)
+  home-manager.users.cnqso = {
+    programs.niri.settings = {
+      outputs = {
+        "HDMI-A-2" = {
+          mode = {
+            width = 2560;
+            height = 1440;
+            refresh = 59.951;
+          };
+          position = {
+            x = 0;
+            y = 0;
+          };
+        };
+        "DP-1" = {
+          mode = {
+            width = 2560;
+            height = 1440;
+            refresh = 143.912;
+          };
+          position = {
+            x = 2560;
+            y = 0;
+          };
+        };
+      };
+    };
   };
-
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;
-
-  environment.systemPackages = with pkgs; [
-    git
-    vim
-    wget
-    kitty
-    firefox
-    xwayland-satellite
-    fuzzel
-    alacritty
-    neovim
-    wlr-randr
-
-    code-cursor
-    wl-clipboard
-  ];
 
   system.stateVersion = "24.11";
 }
