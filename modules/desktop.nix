@@ -32,6 +32,7 @@
     
     # Development
     code-cursor
+    claude-code
   ];
 }
 
