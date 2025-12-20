@@ -11,9 +11,13 @@
       url = "github:sodiboo/niri-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, disko, home-manager, niri, ... }@inputs: {
+  outputs = { self, nixpkgs, disko, home-manager, niri, stylix, ... }@inputs: {
     nixosConfigurations = {
       crest = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -22,6 +26,7 @@
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
           niri.nixosModules.niri
+          stylix.nixosModules.stylix
           ./hosts/crest/disks.nix
           ./hosts/crest/default.nix
         ];
@@ -34,6 +39,7 @@
           disko.nixosModules.disko
           home-manager.nixosModules.home-manager
           niri.nixosModules.niri
+          stylix.nixosModules.stylix
           ./hosts/ste/disks.nix
           ./hosts/ste/default.nix
         ];

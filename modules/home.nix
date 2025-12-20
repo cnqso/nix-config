@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, inputs, ... }:
 
 {
   # Configure Home Manager
@@ -8,6 +8,10 @@
     backupFileExtension = "backup";
 
     users.cnqso = { config, osConfig, ... }: {
+      imports = [
+        inputs.stylix.homeModules.stylix
+      ];
+      
       home.stateVersion = "24.11";
 
       home.packages = with pkgs; [
@@ -82,23 +86,40 @@
         '';
       };
 
-      # NOTE: Home Manager niri config removed for now (it was failing evaluation because
-      # Home Manager doesn't provide a `programs.niri` module / `lib.niri` helpers here).
-      programs.niri = lib.mkIf (osConfig.networking.hostName == "crest") {
-        # Keep it dead simple: set the exact max modes we detected.
-        config = ''
-          output "HDMI-A-2" {
-              mode "2560x1440@59.951"
-              position x=0 y=0
-          }
 
-          output "DP-1" {
-              mode "2560x1440@143.912"
-              position x=2560 y=0
-              focus-at-startup
-          }
-        '';
+      # Niri settings (crest-specific monitor layout)
+      programs.niri.settings = lib.mkIf (osConfig.networking.hostName == "crest") {
+        outputs = {
+          "HDMI-A-2" = {
+            mode = {
+              width = 2560;
+              height = 1440;
+              refresh = 59.951;
+            };
+            position = {
+              x = 0;
+              y = 0;
+            };
+          };
+          "DP-1" = {
+            mode = {
+              width = 2560;
+              height = 1440;
+              refresh = 143.912;
+            };
+            position = {
+              x = 2560;
+              y = 0;
+            };
+          };
+        };
+        # Set DP-1 as preferred output (where niri will spawn windows by default)
+        prefer-no-csd = true;
       };
+
+      # Enable stylix for niri theming
+      stylix.targets.niri.enable = true;
+
 
       # Kitty terminal configuration (simple rice)
       programs.kitty = {
