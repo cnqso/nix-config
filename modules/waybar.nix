@@ -93,6 +93,8 @@
             format-ethernet = " {ifname}";
             format-disconnected = "No connection";
             format-alt = " {ipaddr}/{cidr}";
+            on-click = "nm-connection-editor";
+            on-click-right = "kitty -e nmtui";
             tooltip = false;
           };
 
