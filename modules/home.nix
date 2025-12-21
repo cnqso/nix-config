@@ -12,6 +12,7 @@
 
       home.packages = with pkgs; [
         nerd-fonts.jetbrains-mono
+        playerctl
       ];
 
       programs.git = {
@@ -211,6 +212,9 @@
           "XF86AudioLowerVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"];
           "XF86AudioMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
           "XF86AudioMicMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
+          # Some mice expose a dedicated "pause" button that sends one of these keys
+          "XF86AudioPlay".action.spawn = ["playerctl" "play-pause"];
+          "XF86AudioPause".action.spawn = ["playerctl" "play-pause"];
 
           "Mod+Shift+Slash".action.show-hotkey-overlay = {};
 

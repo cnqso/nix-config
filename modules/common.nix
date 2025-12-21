@@ -33,6 +33,8 @@
     neovim
     wget
     fastfetch
+    alejandra
+    nh
   ];
 }
 

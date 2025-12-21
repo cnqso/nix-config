@@ -32,6 +32,19 @@
         ];
       };
 
+      gluee = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        specialArgs = { inherit inputs; };
+        modules = [
+          disko.nixosModules.disko
+          home-manager.nixosModules.home-manager
+          niri.nixosModules.niri
+          stylix.nixosModules.stylix
+          ./hosts/gluee/disks.nix
+          ./hosts/gluee/default.nix
+        ];
+      };
+
       ste = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
         specialArgs = { inherit inputs; };

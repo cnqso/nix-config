@@ -33,6 +33,8 @@
     # Development
     code-cursor
     claude-code
+
+    dolphin-emu
   ];
 }
 
