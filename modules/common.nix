@@ -35,6 +35,7 @@
     fastfetch
     alejandra
     nh
+    btop
   ];
 }
 

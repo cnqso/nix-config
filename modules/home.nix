@@ -244,7 +244,12 @@
         fzf.enable = true;
         bat.enable = true;
         fuzzel.enable = true;
+        fuzzel.colors.enable = true;
         firefox.enable = true;
+        btop = {
+          enable = true;
+          colors.enable = true;
+        };
       };
 
       programs.kitty = {
