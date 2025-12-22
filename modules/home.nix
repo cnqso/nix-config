@@ -117,8 +117,6 @@
           "Mod+K".action.focus-window-up = {};
           "Mod+Left".action.focus-column-left = {};
           "Mod+Right".action.focus-column-right = {};
-          "Mod+Down".action.focus-window-down = {};
-          "Mod+Up".action.focus-window-up = {};
           
           
           "Mod+Home".action.focus-column-first = {};
@@ -133,13 +131,11 @@
           "Mod+Shift+K".action.move-window-up = {};
           "Mod+Shift+Left".action.move-column-left = {};
           "Mod+Shift+Right".action.move-column-right = {};
-          "Mod+Shift+Down".action.move-window-down = {};
-          "Mod+Shift+Up".action.move-window-up = {};
 
           "Mod+Page_Down".action.focus-workspace-down = {};
           "Mod+Page_Up".action.focus-workspace-up = {};
-          "Mod+U".action.focus-workspace-up = {};
-          "Mod+I".action.focus-workspace-down = {};
+          "Mod+Up".action.focus-workspace-up = {};
+          "Mod+Down".action.focus-workspace-down = {};
           "Mod+Ctrl+Page_Down".action.move-column-to-workspace-down = {};
           "Mod+Ctrl+Page_Up".action.move-column-to-workspace-up = {};
           "Mod+Ctrl+U".action.move-column-to-workspace-up = {};
@@ -147,8 +143,8 @@
 
           "Mod+Shift+Page_Down".action.move-workspace-down = {};
           "Mod+Shift+Page_Up".action.move-workspace-up = {};
-          "Mod+Shift+U".action.move-workspace-up = {};
-          "Mod+Shift+I".action.move-workspace-down = {};
+          "Mod+Shift+Up".action.move-workspace-up = {};
+          "Mod+Shift+Down".action.move-workspace-down = {};
           
           # Workspaces
           "Mod+1".action.focus-workspace = 1;
