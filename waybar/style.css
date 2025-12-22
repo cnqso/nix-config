@@ -42,7 +42,7 @@
 @define-color cpu	@green;
 @define-color temp	@brgreen;
 @define-color layout	@bryellow;
-@define-color battery	@aqua;
+@define-color battery	@black;
 @define-color date	@black;
 @define-color time	@white;
 

@@ -13,6 +13,7 @@
       home.packages = with pkgs; [
         nerd-fonts.jetbrains-mono
         playerctl
+        brightnessctl
       ];
 
       programs.git = {
@@ -94,6 +95,12 @@
       # Universal niri settings (monitor layouts are host-specific)
       programs.niri.settings = {
         prefer-no-csd = true;
+
+        # Always start Waybar alongside Niri.
+        # Host configs can append more entries with `lib.mkAfter`.
+        spawn-at-startup = [
+          { command = [ "waybar" ]; }
+        ];
         
         # Default keybinds
         binds = {
@@ -215,6 +222,14 @@
           # Some mice expose a dedicated "pause" button that sends one of these keys
           "XF86AudioPlay".action.spawn = ["playerctl" "play-pause"];
           "XF86AudioPause".action.spawn = ["playerctl" "play-pause"];
+          
+          # Brightness keys
+          "XF86MonBrightnessUp".action.spawn = ["brightnessctl" "set" "10%+"];
+          "XF86MonBrightnessDown".action.spawn = ["brightnessctl" "set" "10%-"];
+          
+          # Keyboard backlight keys
+          "XF86KbdBrightnessUp".action.spawn = ["brightnessctl" "--device=*kbd_backlight" "set" "10%+"];
+          "XF86KbdBrightnessDown".action.spawn = ["brightnessctl" "--device=*kbd_backlight" "set" "10%-"];
 
           "Mod+Shift+Slash".action.show-hotkey-overlay = {};
 
