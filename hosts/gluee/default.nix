@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
@@ -15,6 +15,9 @@
 
   networking.hostName = "gluee";
 
+  # If your router DNS is flaky, force known-good resolvers (same approach as `crest`).
+  networking.networkmanager.insertNameservers = [ "1.1.1.1" "8.8.8.8" ];
+
   # MacBookPro12,1 typically needs nonfree firmware for Wi-Fi/Bluetooth.
   hardware.enableRedistributableFirmware = true;
 
@@ -22,7 +25,7 @@
   # - Disable Wi-Fi power saving (common cause of drops)
   # - Prefer wpa_supplicant by default (works with Broadcom "wl"/broadcom-sta)
   networking.networkmanager.wifi = {
-    backend = "wpa_supplicant";
+    backend = lib.mkDefault "wpa_supplicant";
     powersave = false;
   };
 

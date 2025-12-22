@@ -12,5 +12,5 @@
   };
 
   # Disable legacy PulseAudio
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 }
