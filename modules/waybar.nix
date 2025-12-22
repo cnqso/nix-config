@@ -365,7 +365,7 @@
 
         #battery {
           background: @battery;
-          color: @fg;
+          color: @bg;
         }
 
         #tray {
