@@ -1,8 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   # Universal waybar configuration for all hosts
-  home-manager.users.cnqso = {
+  home-manager.users.cnqso = { config, ... }: let
+    # Stylix colors for injection into CSS
+    c = config.lib.stylix.colors;
+  in {
     programs.waybar = {
       enable = true;
 
@@ -79,7 +82,7 @@
 
           memory = {
             interval = 5;
-            format = " {used:0.1f}G/{total:0.1f}G";
+            format = " {used:0.1f}G/{total:0.1f}G";
             states = {
               warning = 70;
               critical = 90;
@@ -90,9 +93,9 @@
           network = {
             interval = 5;
             format-wifi = " {essid} ({signalStrength}%)";
-            format-ethernet = " {ifname}";
+            format-ethernet = " {ifname}";
             format-disconnected = "No connection";
-            format-alt = " {ipaddr}/{cidr}";
+            format-alt = " {ipaddr}/{cidr}";
             on-click = "nm-connection-editor";
             on-click-right = "kitty -e nmtui";
             tooltip = false;
@@ -105,7 +108,11 @@
           };
 
           "niri/workspaces" = {
-            format = "{name}";
+            format = "{icon}";
+            "format-icons" = {
+              "active" = "*";
+              "default" = "*";
+            };
           };
 
           pulseaudio = {
@@ -114,8 +121,8 @@
             format-muted = "";
             format-icons = {
               headphone = "";
-              hands-free = "";
-              headset = "";
+              hands-free = "";
+              headset = "";
               phone = "";
               portable = "";
               car = "";
@@ -191,7 +198,250 @@
         };
       };
 
-    style = ../waybar/style.css;
+      style = ''
+        /* Keyframes */
+        @keyframes blink-critical {
+          to {
+            background-color: #${c.base08};
+          }
+        }
+
+        /* Semantic waybar colors mapped directly to base16 roles */
+        @define-color warning    #${c.base0A};  /* Classes, Markup Bold, Search Text Background */
+        @define-color critical   #${c.base08};  /* Variables, XML Tags, Markup Link Text, Diff Deleted */
+        @define-color mode       #${c.base00};  /* Default Background */
+        @define-color unfocused  #${c.base03};  /* Lighter Background (Used for status bars) */
+        @define-color focused    #${c.base0C};  /* Support, Regular Expressions, Escape Characters, Markup Quotes */
+        @define-color inactive   #${c.base0E};  /* Keywords, Storage, Selector, Markup Italic, Diff Changed */
+        @define-color sound      #${c.base0E};  /* Keywords, Storage, Selector, Markup Italic, Diff Changed */
+        @define-color network    #${c.base0D};  /* Functions, Methods, Attribute IDs, Headings */
+        @define-color memory     #${c.base0C};  /* Support, Regular Expressions, Escape Characters, Markup Quotes */
+        @define-color cpu        #${c.base0B};  /* Strings, Inherited Class, Markup Code, Diff Inserted */
+        @define-color temp       #${c.base09};  /* Integers, Boolean, Constants, XML Attributes, Markup Link Url */
+        @define-color layout     #${c.base00};  /* Classes, Markup Bold, Search Text Background */
+        @define-color battery    #${c.base0C};  /* Default Background */
+        @define-color date       #${c.base00};  /* Default Background */
+        @define-color time       #${c.base05};  /* Default Foreground, Caret, Delimiters, Operators */
+        
+        /* Basic text and background colors */
+        @define-color fg         #${c.base05};  /* Default Foreground, Caret, Delimiters, Operators */
+        @define-color bg         #${c.base00};  /* Default Background */
+
+        /* Reset all styles */
+        * {
+          border: none;
+          border-radius: 0;
+          min-height: 0;
+          margin: 0;
+          padding: 0;
+          box-shadow: none;
+          text-shadow: none;
+          icon-shadow: none;
+        }
+
+        /* The whole bar */
+        #waybar {
+          background: @bg;
+          color: @fg;
+          font-family: "${config.stylix.fonts.monospace.name}";
+          font-size: 10pt;
+          font-weight: normal;
+        }
+
+        /* Each module */
+        #battery,
+        #clock,
+        #cpu,
+        #language,
+        #memory,
+        #mode,
+        #network,
+        #pulseaudio,
+        #temperature,
+        #tray,
+        #backlight,
+        #idle_inhibitor,
+        #disk,
+        #user,
+        #mpris {
+          padding-left: 8pt;
+          padding-right: 8pt;
+        }
+
+        /* Each critical module */
+        #mode,
+        #memory.critical,
+        #cpu.critical,
+        #temperature.critical,
+        #battery.critical.discharging {
+          animation-timing-function: linear;
+          animation-iteration-count: infinite;
+          animation-direction: alternate;
+          animation-name: blink-critical;
+          animation-duration: 1s;
+        }
+
+        /* Each warning */
+        #network.disconnected,
+        #memory.warning,
+        #cpu.warning,
+        #temperature.warning,
+        #battery.warning.discharging {
+          color: @warning;
+        }
+
+        /* Current sway mode (resize etc) */
+        #mode {
+          color: @fg;
+          background: @mode;
+        }
+
+        /* Workspaces stuff */
+        #workspaces button {
+          padding-left: 2pt;
+          padding-right: 2pt;
+          color: @fg;
+          background: @unfocused;
+        }
+
+        /* Inactive (on unfocused output) */
+        #workspaces button.visible {
+          color: @fg;
+          background: @inactive;
+        }
+
+        /* Active (on focused output) */
+        #workspaces button.focused {
+          color: @bg;
+          background: @focused;
+        }
+
+        /* Contains an urgent window */
+        #workspaces button.urgent {
+          color: @bg;
+          background: @warning;
+        }
+
+        /* Style when cursor is on the button */
+        #workspaces button:hover {
+          background: @bg;
+          color: @fg;
+        }
+
+        #window {
+          margin-right: 35pt;
+          margin-left: 35pt;
+        }
+
+        #pulseaudio {
+          background: @sound;
+          color: @bg;
+        }
+
+        #network {
+          background: @network;
+          color: @bg;
+        }
+
+        #memory {
+          background: @memory;
+          color: @bg;
+        }
+
+        #cpu {
+          background: @cpu;
+          color: @bg;
+        }
+
+        #temperature {
+          background: @temp;
+          color: @bg;
+        }
+
+        #language {
+          background: @bg;
+          color: @bg;
+        }
+
+        #battery {
+          background: @battery;
+          color: @fg;
+        }
+
+        #tray {
+          background: @date;
+        }
+
+        #clock.date {
+          background: @date;
+          color: @fg;
+        }
+
+        #clock.time {
+          background: @time;
+          color: @bg;
+        }
+
+        #custom-arrow1 {
+          font-size: 11pt;
+          color: @time;
+          background: @date;
+        }
+
+        #custom-arrow2 {
+          font-size: 11pt;
+          color: @date;
+          background: @layout;
+        }
+
+        #custom-arrow3 {
+          font-size: 11pt;
+          color: @layout;
+          background: @battery;
+        }
+
+        #custom-arrow4 {
+          font-size: 11pt;
+          color: @battery;
+          background: @temp;
+        }
+
+        #custom-arrow5 {
+          font-size: 11pt;
+          color: @temp;
+          background: @cpu;
+        }
+
+        #custom-arrow6 {
+          font-size: 11pt;
+          color: @cpu;
+          background: @memory;
+        }
+
+        #custom-arrow7 {
+          font-size: 11pt;
+          color: @memory;
+          background: @network;
+        }
+
+        #custom-arrow8 {
+          font-size: 11pt;
+          color: @network;
+          background: @sound;
+        }
+
+        #custom-arrow9 {
+          font-size: 11pt;
+          color: @sound;
+          background: transparent;
+        }
+
+        #custom-arrow10 {
+          font-size: 11pt;
+          color: @unfocused;
+          background: transparent;
+        }
+      '';
     };
   };
 }

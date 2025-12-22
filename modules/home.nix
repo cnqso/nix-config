@@ -247,6 +247,8 @@
         gtk.enable = true;
         fzf.enable = true;
         bat.enable = true;
+        fuzzel.enable = true;
+        firefox.enable = true;
       };
 
       programs.kitty = {
