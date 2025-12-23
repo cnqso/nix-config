@@ -5,7 +5,6 @@
     ./hardware.nix
     ../../modules/home.nix
     ../../modules/common.nix
-    ../../modules/desktop.nix
     ../../modules/dev.nix
     ../../modules/audio.nix
     ../../modules/bluetooth.nix

@@ -1,6 +1,56 @@
 { pkgs, lib, inputs, ... }:
 
 {
+  # Wayland environment variables
+  environment.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    MOZ_ENABLE_WAYLAND = "1";
+    MOZ_USE_XINPUT2 = "1";
+  };
+
+  # XDG Desktop Portal (needed for Wayland screen sharing + nicer file pickers)
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-wlr
+      xdg-desktop-portal-gtk
+    ];
+  };
+
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    localNetworkGameTransfers.openFirewall = true;
+  };
+
+  programs.niri.enable = true;
+
+
+
+  # Desktop applications and tools
+  environment.systemPackages = with pkgs; [
+    # Terminals
+    kitty
+    alacritty
+
+    # Browser
+    firefox
+
+    # Wayland utilities
+    xwayland-satellite
+    fuzzel
+    wlr-randr
+    wl-clipboard
+    prismlauncher
+
+    # Development
+    code-cursor
+    claude-code
+
+    dolphin-emu
+  ];
+
   # Configure Home Manager
   home-manager = {
     useGlobalPkgs = true;
@@ -25,6 +75,21 @@
           };
           init.defaultBranch = "main";
           pull.rebase = false;
+        };
+      };
+
+      programs.firefox = {
+        enable = true;
+        profiles.default = {
+          id = 0;
+          isDefault = true;
+          settings = {
+            # Always use XDG portals for file picking under Wayland.
+            "widget.use-xdg-desktop-portal.file-picker" = 1;
+
+            # Allow userChrome/userContent (Stylix uses this).
+            "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+          };
         };
       };
 
@@ -91,9 +156,8 @@
         '';
       };
 
-
-      # Universal niri settings (monitor layouts are host-specific)
       programs.niri.settings = {
+
         prefer-no-csd = true;
 
         # Always start Waybar alongside Niri.
@@ -104,12 +168,10 @@
         
         # Default keybinds
         binds = {
-          # Launchers
+
           "Mod+T".action.spawn = ["kitty"];
-          "Mod+D".action.spawn = ["fuzzel"];
-          "Mod+Space".action.spawn = ["kitty"];
+          "Mod+Space".action.spawn = ["fuzzel"];
           
-          # Window management
           "Mod+Q".action.close-window = {};
           "Mod+H".action.focus-column-left = {};
           "Mod+L".action.focus-column-right = {};
@@ -124,7 +186,6 @@
           "Mod+Ctrl+Home".action.move-column-to-first = {};
           "Mod+Ctrl+End".action.move-column-to-last = {};
           
-          # Moving windows
           "Mod+Shift+H".action.move-column-left = {};
           "Mod+Shift+L".action.move-column-right = {};
           "Mod+Shift+J".action.move-window-down = {};
@@ -146,7 +207,6 @@
           "Mod+Shift+Up".action.move-workspace-up = {};
           "Mod+Shift+Down".action.move-workspace-down = {};
           
-          # Workspaces
           "Mod+1".action.focus-workspace = 1;
           "Mod+2".action.focus-workspace = 2;
           "Mod+3".action.focus-workspace = 3;
@@ -167,7 +227,6 @@
           "Mod+Ctrl+8".action.move-column-to-workspace = 8;
           "Mod+Ctrl+9".action.move-column-to-workspace = 9;
           
-          # Move to workspace
           "Mod+Shift+1".action.move-window-to-workspace = 1;
           "Mod+Shift+2".action.move-window-to-workspace = 2;
           "Mod+Shift+3".action.move-window-to-workspace = 3;
@@ -181,13 +240,11 @@
           "Mod+Comma".action.consume-window-into-column = {};
           "Mod+Period".action.expel-window-from-column = {};
           
-          # Window sizing
           "Mod+R".action.switch-preset-column-width = {};
           "Mod+F".action.maximize-column = {};
           "Mod+Shift+F".action.fullscreen-window = {};
           "Mod+C".action.center-column = {};
           
-          # Monitor navigation
           "Mod+Shift+Ctrl+Left".action.move-column-to-monitor-left = {};
           "Mod+Shift+Ctrl+Right".action.move-column-to-monitor-right = {};
           "Mod+Shift+Ctrl+H".action.move-column-to-monitor-left = {};
@@ -196,12 +253,10 @@
           "Mod+Ctrl+Right".action.focus-monitor-right = {};
           "Mod+Ctrl+Left".action.focus-monitor-left = {};
           
-          # Screenshots
           "Print".action.screenshot = {};
           "Ctrl+Print".action.screenshot-screen = {};
           "Alt+Print".action.screenshot-window = {};
           
-          # System
           "Mod+Shift+E".action.quit = {};
           "Mod+Shift+P".action.power-off-monitors = {};
 
@@ -210,20 +265,17 @@
           "Mod+Shift+Minus".action.set-column-width = "-10%";
           "Mod+Shift+Equal".action.set-column-width = "+10%";
           
-          # Media keys
           "XF86AudioRaiseVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1+"];
           "XF86AudioLowerVolume".action.spawn = ["wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "0.1-"];
           "XF86AudioMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SINK@" "toggle"];
           "XF86AudioMicMute".action.spawn = ["wpctl" "set-mute" "@DEFAULT_AUDIO_SOURCE@" "toggle"];
-          # Some mice expose a dedicated "pause" button that sends one of these keys
+
           "XF86AudioPlay".action.spawn = ["playerctl" "play-pause"];
           "XF86AudioPause".action.spawn = ["playerctl" "play-pause"];
           
-          # Brightness keys
           "XF86MonBrightnessUp".action.spawn = ["brightnessctl" "set" "10%+"];
           "XF86MonBrightnessDown".action.spawn = ["brightnessctl" "set" "10%-"];
           
-          # Keyboard backlight keys
           "XF86KbdBrightnessUp".action.spawn = ["brightnessctl" "--device=*kbd_backlight" "set" "10%+"];
           "XF86KbdBrightnessDown".action.spawn = ["brightnessctl" "--device=*kbd_backlight" "set" "10%-"];
 
@@ -245,7 +297,10 @@
         bat.enable = true;
         fuzzel.enable = true;
         fuzzel.colors.enable = true;
-        firefox.enable = true;
+        firefox = {
+          enable = true;
+          profileNames = [ "default" ];
+        };
         btop = {
           enable = true;
           colors.enable = true;
