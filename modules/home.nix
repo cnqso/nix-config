@@ -83,6 +83,7 @@
         profiles.default = {
           id = 0;
           isDefault = true;
+          extensions.force = true;
           settings = {
             # Always use XDG portals for file picking under Wayland.
             "widget.use-xdg-desktop-portal.file-picker" = 1;
@@ -299,6 +300,8 @@
         fuzzel.colors.enable = true;
         firefox = {
           enable = true;
+          colors.enable = true;
+          colorTheme.enable = true;
           profileNames = [ "default" ];
         };
         btop = {
