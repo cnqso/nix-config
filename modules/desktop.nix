@@ -29,6 +29,7 @@
     fuzzel
     wlr-randr
     wl-clipboard
+    prismlauncher
     
     # Development
     code-cursor

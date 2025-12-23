@@ -35,8 +35,9 @@
             "battery"
             "custom/arrow3"
             "tray"
-            "clock#date"
             "custom/arrow1"
+            "clock#date"
+            "custom/arrow0"
             "clock#time"
           ];
 
@@ -146,6 +147,11 @@
           };
 
           # Custom arrow modules for styling
+          "custom/arrow0" = {
+            format = "";
+            tooltip = false;
+          };
+
           "custom/arrow1" = {
             format = "";
             tooltip = false;
@@ -369,7 +375,7 @@
         }
 
         #tray {
-          background: @date;
+          background: @time;
         }
 
         #clock.date {
@@ -382,21 +388,27 @@
           color: @bg;
         }
 
-        #custom-arrow1 {
+        #custom-arrow0 {
           font-size: 11pt;
           color: @time;
           background: @date;
         }
 
+        #custom-arrow1 {
+          font-size: 11pt;
+          color: @date;
+          background: @time;
+        }
+
         #custom-arrow2 {
           font-size: 11pt;
           color: @date;
-          background: @layout;
+          background: @time;
         }
 
         #custom-arrow3 {
           font-size: 11pt;
-          color: @layout;
+          color: @time;
           background: @battery;
         }
 
