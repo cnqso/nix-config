@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   boot.loader.systemd-boot.enable = true;
@@ -18,6 +18,9 @@
   # Nix settings
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
+  # Allow the (deprecated/insecure) Broadcom STA driver when explicitly selected
+  # via the `wifi-broadcom-sta` specialisation on some hosts.
+  nixpkgs.config.allowInsecurePredicate = pkg: lib.getName pkg == "broadcom-sta";
 
   programs.nh = {
     enable = true;
