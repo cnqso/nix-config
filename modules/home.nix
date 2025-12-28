@@ -37,6 +37,9 @@
     # Browser
     firefox
 
+    # Torrent client
+    qbittorrent
+
     # Wayland utilities
     xwayland-satellite
     fuzzel
