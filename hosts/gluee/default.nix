@@ -14,19 +14,8 @@
 
   networking.hostName = "gluee";
 
-  # If your router DNS is flaky, force known-good resolvers (same approach as `crest`).
-  networking.networkmanager.insertNameservers = [ "1.1.1.1" "8.8.8.8" ];
-
   # MacBookPro12,1 typically needs nonfree firmware for Wi-Fi/Bluetooth.
   hardware.enableRedistributableFirmware = true;
-
-  # Broadcom STA ("wl") is required for Wi‑Fi on this machine.
-  # This is marked insecure upstream; we accept the risk on this host because it is
-  # the only reliable way to get network connectivity.
-  nixpkgs.config.allowInsecurePredicate = pkg: lib.getName pkg == "broadcom-sta";
-  boot.extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
-  boot.kernelModules = [ "wl" ];
-  boot.blacklistedKernelModules = [ "b43" "bcma" "brcmsmac" "brcmfmac" "ssb" ];
 
   # Robust Wi-Fi defaults (especially helpful on older laptops):
   # - Disable Wi-Fi power saving (common cause of drops)
@@ -49,8 +38,36 @@
     networkmanager_dmenu
   ];
 
+  # If Wi-Fi is Broadcom and doesn't come up automatically, you can pick a
+  # specialisation from the boot menu and reboot.
+  #
+  # - `wifi-broadcom-sta`: uses Broadcom's "wl" (broadcom-sta) driver
+  # - `wifi-brcmfmac`: explicitly avoids wl and relies on in-kernel brcmfmac
+  specialisation = {
+    wifi-broadcom-sta.configuration = {
+      boot.extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
+      boot.kernelModules = [ "wl" ];
+      boot.blacklistedKernelModules = [ "b43" "bcma" "brcmsmac" "brcmfmac" "ssb" ];
+
+      networking.networkmanager.wifi.backend = "wpa_supplicant";
+    };
+
+    wifi-brcmfmac.configuration = {
+      boot.blacklistedKernelModules = [ "wl" ];
+    };
+
+    # Optional: try iwd backend (often great with in-kernel drivers, but
+    # generally NOT compatible with Broadcom "wl"/broadcom-sta).
+    wifi-iwd.configuration = {
+      networking.wireless.iwd.enable = true;
+      networking.networkmanager.wifi.backend = "iwd";
+      networking.networkmanager.wifi.powersave = false;
+      boot.blacklistedKernelModules = [ "wl" ];
+    };
+  };
+
   # Autostart the Wi-Fi tray applet so you always have a GUI.
-  home-manager.users.cnqso.programs.niri.settings.spawn-at-startup = lib.mkAfter [
+  home-manager.users.cnqso.programs.niri.settings.spawn-at-startup = [
     { command = [ "nm-applet" ]; }
   ];
 

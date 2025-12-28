@@ -67,6 +67,7 @@
         nerd-fonts.jetbrains-mono
         playerctl
         brightnessctl
+        telegram-desktop
       ];
 
       programs.git = {
@@ -78,6 +79,7 @@
           };
           init.defaultBranch = "main";
           pull.rebase = false;
+          credential.helper = "store";
         };
       };
 
