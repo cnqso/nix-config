@@ -40,5 +40,16 @@
     nh
     btop
   ];
+
+  # SSH server
+  services.openssh = {
+    enable = true;
+    openFirewall = true; # allow TCP/22 through the host firewall
+    settings = {
+      PasswordAuthentication = true;
+      KbdInteractiveAuthentication = true;
+      PermitRootLogin = "no";
+    };
+  };
 }
 

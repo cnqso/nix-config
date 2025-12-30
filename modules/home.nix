@@ -30,24 +30,29 @@
 
   # Desktop applications and tools
   environment.systemPackages = with pkgs; [
-    # Terminals
+    
     kitty
     alacritty
 
-    # Browser
+
     firefox
 
-    # Torrent client
+
     qbittorrent
 
-    # Wayland utilities
+
+    vlc
+
+    ranger
+
+
     xwayland-satellite
     fuzzel
     wlr-randr
     wl-clipboard
     prismlauncher
 
-    # Development
+
     code-cursor
     claude-code
 
