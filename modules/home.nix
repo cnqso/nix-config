@@ -15,6 +15,24 @@
       xdg-desktop-portal-wlr
       xdg-desktop-portal-gtk
     ];
+    # Make portal backend selection explicit.
+    # On wlroots compositors, the wlr backend is great for screencast/screenshot,
+    # but the GTK backend is the one that implements the file chooser Firefox uses
+    # when `widget.use-xdg-desktop-portal.file-picker` is enabled.
+    config = {
+      common = {
+        default = [ "gtk" ];
+      };
+      "org.freedesktop.impl.portal.FileChooser" = {
+        default = [ "gtk" ];
+      };
+      "org.freedesktop.impl.portal.ScreenCast" = {
+        default = [ "wlr" ];
+      };
+      "org.freedesktop.impl.portal.Screenshot" = {
+        default = [ "wlr" ];
+      };
+    };
   };
 
   programs.steam = {
