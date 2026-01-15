@@ -17,10 +17,8 @@
 
   # Nix settings
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nixpkgs.config.allowUnfree = true;
-  # Allow the (deprecated/insecure) Broadcom STA driver when explicitly selected
-  # via the `wifi-broadcom-sta` specialisation on some hosts.
-  nixpkgs.config.allowInsecurePredicate = pkg: lib.getName pkg == "broadcom-sta";
+  # NOTE: nixpkgs config (allowUnfree / permittedInsecurePackages / allowInsecurePredicate)
+  # is set when importing pkgs in `flake.nix` (since `pkgs = ...` is passed to nixosSystem).
 
   programs.nh = {
     enable = true;

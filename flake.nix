@@ -17,10 +17,29 @@
     };
   };
 
-  outputs = { self, nixpkgs, disko, home-manager, niri, stylix, ... }@inputs: {
+  outputs = { self, nixpkgs, disko, home-manager, niri, stylix, ... }@inputs:
+    let
+      mkPkgs = system:
+        import nixpkgs {
+          inherit system;
+          config = {
+            allowUnfree = true;
+            # Ren'Py pulls in python ecdsa which nixpkgs marks insecure; allow it explicitly.
+            permittedInsecurePackages = [ "python3.12-ecdsa-0.19.1" ];
+            allowInsecurePredicate = pkg:
+              let
+                name = nixpkgs.lib.getName pkg;
+                fullName = pkg.name or "";
+              in
+              name == "broadcom-sta" || fullName == "python3.12-ecdsa-0.19.1";
+          };
+        };
+    in
+    {
     nixosConfigurations = {
       crest = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        pkgs = mkPkgs "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
           disko.nixosModules.disko
@@ -34,6 +53,7 @@
 
       gluee = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        pkgs = mkPkgs "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
           disko.nixosModules.disko
@@ -47,6 +67,7 @@
 
       ste = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
+        pkgs = mkPkgs "x86_64-linux";
         specialArgs = { inherit inputs; };
         modules = [
           disko.nixosModules.disko
