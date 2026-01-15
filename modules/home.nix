@@ -132,12 +132,12 @@
             },
             {
               "type": "os",
-              "key": " ",
+              "key": "󱄅 ",
               "keyColor": "white"
             },
             {
               "type": "wm",
-              "key": " ",
+              "key": "󰖯 ",
               "keyColor": "white"
             },
             {
