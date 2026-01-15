@@ -63,6 +63,8 @@
 
     ranger
 
+    renpy
+
 
     xwayland-satellite
     fuzzel
@@ -86,11 +88,63 @@
     users.cnqso = { config, osConfig, ... }: {
       home.stateVersion = "24.11";
 
+      # Ranger config (ported from `rangerBackup/`) + thumbnail/preview deps.
+      xdg.configFile."ranger/rc.conf".source = ../rangerBackup/rc.conf;
+      xdg.configFile."ranger/rifle.conf".source = ../rangerBackup/rifle.conf;
+      xdg.configFile."ranger/commands.py".source = ../rangerBackup/commands.py;
+      xdg.configFile."ranger/commands_full.py".source = ../rangerBackup/commands_full.py;
+      xdg.configFile."ranger/scope.sh" = {
+        source = ../rangerBackup/scope.sh;
+        executable = true;
+      };
+
       home.packages = with pkgs; [
         nerd-fonts.jetbrains-mono
         playerctl
         brightnessctl
         telegram-desktop
+
+        # Ranger previews (kitty image protocol + ffmpeg thumbnailer).
+        ffmpegthumbnailer
+        imagemagick
+        (symlinkJoin {
+          name = "ranger";
+          paths = [ ranger ];
+          buildInputs = [ makeWrapper ];
+          postBuild = ''
+            wrapProgram "$out/bin/ranger" \
+              --prefix PYTHONPATH : "${python3Packages.pillow}/${python3.sitePackages}"
+          '';
+        })
+
+        # Linux BSP Case Folding Workaround helper + deps (Source 1 missing textures fix)
+        curl
+        inotify-tools
+        libnotify
+        parallel
+        rsync
+        unzip
+        git
+        (writeShellScriptBin "lbspcfw" ''
+          set -euo pipefail
+
+          REPO_URL="https://github.com/scorpius2k1/linux-bsp-casefolding-workaround.git"
+          BASE_DIR="$(printenv XDG_DATA_HOME 2>/dev/null || true)"
+          if [[ -z "$BASE_DIR" ]]; then
+            BASE_DIR="$HOME/.local/share"
+          fi
+          REPO_DIR="$BASE_DIR/linux-bsp-casefolding-workaround"
+
+          if [[ ! -d "$REPO_DIR/.git" ]]; then
+            mkdir -p "$(dirname "$REPO_DIR")"
+            git clone --depth 1 "$REPO_URL" "$REPO_DIR"
+          else
+            git -C "$REPO_DIR" pull --ff-only || true
+          fi
+
+          chmod +x "$REPO_DIR/lbspcfw.sh"
+          exec "$REPO_DIR/lbspcfw.sh" "$@"
+        '')
       ];
 
       programs.git = {

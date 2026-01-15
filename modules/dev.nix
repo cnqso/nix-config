@@ -13,4 +13,14 @@
     openssl
     # Add other libs if your Go server links to them (e.g., sqlite)
   ];
+
+  # Python for data analysis
+  environment.systemPackages = with pkgs; [
+    (python3.withPackages (ps: with ps; [
+      pandas
+      plotly
+      requests
+      numpy
+    ]))
+  ];
 }
