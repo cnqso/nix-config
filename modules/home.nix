@@ -44,6 +44,12 @@
 
   programs.niri.enable = true;
 
+  # Install Hyprland alongside Niri (does not replace it; you can launch from TTY).
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
+
 
 
   # Desktop applications and tools
