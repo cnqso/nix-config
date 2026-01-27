@@ -36,6 +36,7 @@
     iw
     networkmanagerapplet
     networkmanager_dmenu
+    google-chrome
   ];
 
   # If Wi-Fi is Broadcom and doesn't come up automatically, you can pick a
