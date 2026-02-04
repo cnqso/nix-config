@@ -81,6 +81,7 @@
 
     code-cursor
     claude-code
+    xpipe
 
     dolphin-emu
   ];

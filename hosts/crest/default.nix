@@ -10,6 +10,7 @@
     ../../modules/bluetooth.nix
     ../../modules/stylix.nix
     ../../modules/waybar.nix
+    ../../modules/server.nix
   ];
 
   # Host-specific hardware configuration

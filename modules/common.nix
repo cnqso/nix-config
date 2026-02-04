@@ -33,6 +33,9 @@
     vim
     neovim
     wget
+    gnumake
+    socat
+    whois
     fastfetch
     alejandra
     nh
