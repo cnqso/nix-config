@@ -14,8 +14,14 @@
     # Add other libs if your Go server links to them (e.g., sqlite)
   ];
 
-  # Python for data analysis
+  # Go development with hot-reload
   environment.systemPackages = with pkgs; [
+    go
+    air  # Hot-reload for Go
+    nodejs  # For any TypeScript/JS transpilation
+    gcc  # For CGO (sqlite)
+    
+    # Python for data analysis
     (python3.withPackages (ps: with ps; [
       pandas
       plotly
