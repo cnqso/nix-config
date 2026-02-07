@@ -3,14 +3,14 @@
 {
   imports = [
     ./hardware.nix
-    ../../modules/home.nix
     ../../modules/common.nix
+    ../../modules/desktop.nix
+    ../../modules/media.nix
     ../../modules/dev.nix
-    ../../modules/audio.nix
-    ../../modules/bluetooth.nix
     ../../modules/stylix.nix
     ../../modules/waybar.nix
     ../../modules/server.nix
+    ../../modules/home
   ];
 
   # Host-specific hardware configuration
