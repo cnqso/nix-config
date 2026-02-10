@@ -102,6 +102,8 @@ in
       # Always start Waybar alongside Niri.
       spawn-at-startup = [
         { command = [ "waybar" ]; }
+        { command = [ "mako" ]; }
+        { command = [ "lxqt-policykit-agent" ]; }
       ];
 
       binds = {
@@ -179,7 +181,10 @@ in
 
         # Column management
         "Mod+Comma".action.consume-window-into-column = {};
-        "Mod+Period".action.expel-window-from-column = {};
+        "Mod+Shift+Period".action.expel-window-from-column = {};
+
+        # Emoji picker
+        "Mod+Period".action.spawn = ["bemoji"];
 
         # Layout
         "Mod+R".action.switch-preset-column-width = {};

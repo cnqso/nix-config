@@ -77,6 +77,11 @@
     slurp       # Region selection
     wf-recorder # Screen recording
 
+    # Desktop services
+    mako
+    lxqt.lxqt-policykit
+    bemoji
+
     # Development tools
     code-cursor
     claude-code

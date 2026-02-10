@@ -7,6 +7,9 @@
   # ============================================================================
 
   # Ensure Docker is available (already enabled in dev.nix)
+
+  # Allow Plex to read media on /mnt/sdb (mounted with gid=users).
+  users.users.plex.extraGroups = [ "users" ];
   
   # Create server data directories with proper permissions
   systemd.tmpfiles.rules = [
@@ -38,10 +41,7 @@
     path = [ pkgs.docker ];
   };
 
-  # ============================================================================
-  # Personal Website (cnqso.com) - Go Server (Native, not Docker)
-  # ============================================================================
-  
+
   systemd.services.cnqso-web = {
     description = "Cnqso Personal Website Server (Native Go)";
     after = [ "network-online.target" ];
@@ -79,6 +79,15 @@
   };
 
   # ============================================================================
+  # Plex Media Server
+  # ============================================================================
+
+  services.plex = {
+    enable = true;
+    openFirewall = true; # TCP/32400
+  };
+
+  # ============================================================================
   # Firewall Rules
   # ============================================================================
   
@@ -86,5 +95,6 @@
     80    # HTTP (for Let's Encrypt challenges & redirect to HTTPS)
     443   # HTTPS (Caddy reverse proxy)
     2283  # Immich web interface
+    32400 # Plex
   ];
 }

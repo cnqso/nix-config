@@ -40,6 +40,7 @@
     alejandra
     nh
     btop
+    smartmontools
   ];
 
   # SSH server
@@ -52,5 +53,25 @@
       PermitRootLogin = "no";
     };
   };
-}
 
+  security.sudo.extraRules = [
+    {
+      users = [ "cnqso" ];
+      commands = [
+        # Require password specifically for destructive rm -rf variants.
+        { command = "/run/current-system/sw/bin/rm -rf *"; options = [ "PASSWD" ]; }
+        { command = "/run/current-system/sw/bin/rm -fr *"; options = [ "PASSWD" ]; }
+        { command = "/run/current-system/sw/bin/rm --recursive --force *"; options = [ "PASSWD" ]; }
+        { command = "/bin/rm -rf *"; options = [ "PASSWD" ]; }
+        { command = "/bin/rm -fr *"; options = [ "PASSWD" ]; }
+        { command = "/bin/rm --recursive --force *"; options = [ "PASSWD" ]; }
+      ];
+    }
+    {
+      users = [ "cnqso" ];
+      commands = [
+        { command = "ALL"; options = [ "NOPASSWD" ]; }
+      ];
+    }
+  ];
+}
